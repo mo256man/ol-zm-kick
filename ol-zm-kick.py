@@ -1,4 +1,4 @@
-""" outlook の今日の予定から URL を取り出して、zoom か Teams を起動する """
+""" outlook の今日の予定から URL を取り出して、zoom か Teams を起動する ver1.0  """
 
 #import pyperclip
 import webbrowser
