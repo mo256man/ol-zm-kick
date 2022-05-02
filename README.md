@@ -1,5 +1,5 @@
 # ol-zm-kick
-ol-zm-kick は、 outlook の今日の予定の中で、次に開始される zoom 会議の開始時間に、 zoom を起動するツールです。 zoom だけでなく、 teams の会議にも対応しています。 python で書かれていて、Windows で動作確認済みです。
+ol-zm-kick は、 outlook の今日の予定の中で、次に開始される zoom 会議の開始時間に zoom を起動するツールです。 zoom だけでなく、 teams の会議にも対応しています。 python で書かれていて、Windows で動作確認済みです。
 
 ## logic
 ソースを見て下さい。そこそこ例外動作は入れてあります。
@@ -14,11 +14,11 @@ ol-zm-kick は、 outlook の今日の予定の中で、次に開始される zo
 ソースを持って行った人は、エラーが出たら個別に対応して下さい。
 
 ## Installation
-python の実行環境があれば、zoom-kick.py を DL して使って下さい。
-最大待機時間や、事前起動時間の設定など、ソースを修正して下さい。
+python の実行環境があれば、ol-zm-kick.py を DL して使って下さい。
+最大待機時間(15分)や、事前起動時間(30秒前)の設定など、必要ならソースを修正して下さい。
 
 ## Usage
-動かすだけです。特に UI はありません。
+動かすだけです。特に UI はありません。勝手に outlook を検出し、情報を取り、zoom や teams に URL でアクセスします。
 
 ## Note
 outlook, zoom, teams の仕様が変わると、動かなくなる可能性はあります。
