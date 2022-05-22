@@ -68,7 +68,6 @@ for select_item in select_items:
     start_time = select_item.start.time().strftime('%H:%M:%S')
     end_time = select_item.end.time().strftime('%H:%M:%S')
 
-    # if start_time <= Min and end_time > Min :  #開始15分前～終了15分前まで
     if start_time <= Min < end_time:  #開始15分前～終了15分前まで
         print("該当会議あり：", select_item.subject)
         lines = select_item.body.split()
@@ -157,7 +156,6 @@ if tm_key_idx != -1 : #Teams だったら次の行の前後削除 '<URL>' なの
 Min2 = now_time.strftime('%H:%M:%S')  #実時間
 # Min2 = '09:56:00' # debug 用
  
-# sleep_time = int(start_time[0:2])*3600 + int(start_time[3:5])*60 + int(start_time[6:8]) - int(Min2[0:2])*3600 -int(Min2[3:5])*60 - int(Min2[6:8]) - 30 #分と秒で 30秒前に起動
 sleep_time = (str2time(start_time) - str2time(Min2)).total_seconds() - 30   #分と秒で 30秒前に起動
 if sleep_time < 0 : #残りが30秒以下の場合、すぐ起動する
     sleep_time = 0
