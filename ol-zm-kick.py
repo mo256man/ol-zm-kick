@@ -1,4 +1,4 @@
-""" outlook の今日の予定から URL を取り出して、zoom か Teams を起動する ver1.0  """
+""" outlook の今日の予定から URL を取り出して、zoom か Teams を起動する ver1.1  """
 
 #import pyperclip
 import webbrowser
@@ -6,6 +6,12 @@ import win32com.client
 import datetime
 #import win32timezone
 import time
+
+def str2time(str_time):
+    """
+    %H:%M:%S 形式の文字列をdatetimeオブジェクトに変換する
+    """
+    return datetime.datetime.strptime(str_time, "%H:%M:%S")
 
 kick_url = ''
 zm_tag = 'Meeting)'
@@ -62,7 +68,8 @@ for select_item in select_items:
     start_time = select_item.start.time().strftime('%H:%M:%S')
     end_time = select_item.end.time().strftime('%H:%M:%S')
 
-    if start_time <= Min and end_time > Min :  #開始15分前～終了15分前まで
+    # if start_time <= Min and end_time > Min :  #開始15分前～終了15分前まで
+    if start_time <= Min < end_time:  #開始15分前～終了15分前まで
         print("該当会議あり：", select_item.subject)
         lines = select_item.body.split()
 
@@ -110,36 +117,36 @@ if find_flg == 1 : #zoom のパスコード込みだったら次の行
 else : # pass-code が別にあり
     if zm_key_idx != -1 :
         try:
-	        xmi = lines.index('ミーティングID:')
+            xmi = lines.index('ミーティングID:')
 
         except ValueError :
-	        # エラーを表示
-	        print ('ERR ID 取得に失敗 / ミーディングID: が見当たりません')
-	        input ()
-	        exit()
+            # エラーを表示
+            print ('ERR ID 取得に失敗 / ミーディングID: が見当たりません')
+            input ()
+            exit()
 
         zoom_id = lines[xmi+1] + lines[xmi+2] + lines[xmi+3]
 
         try:
-	        xpc = lines.index('パスコード:')
+            xpc = lines.index('パスコード:')
         except ValueError :
-	        pass
+            pass
 
         if xpc == 0 :
-	        try:
-		        xpw = lines.index('パスワード:') #古い記載の救済
-	        except ValueError :
-		        pass
+            try:
+                xpw = lines.index('パスワード:') #古い記載の救済
+            except ValueError :
+                pass
 
         if xpw != 0 : #パスワード発見
-	        zoom_pc = lines[xpw+1]
+            zoom_pc = lines[xpw+1]
 
         if xpc != 0 : #パスコード発見 パスワードよりパスコードを優先
-	        zoom_pc = lines[xpc+1]
+            zoom_pc = lines[xpc+1]
 
         if zoom_pc =='' :
-	        print ('WRN Pass 取得に失敗 / パスコード: が見当たりませんが起動します')
-	        input ()
+            print ('WRN Pass 取得に失敗 / パスコード: が見当たりませんが起動します')
+            input ()
 
         kick_url = 'zoommtg://zoom.us/join?confno=' + zoom_id + '&pwd=' + zoom_pc
 
@@ -150,7 +157,8 @@ if tm_key_idx != -1 : #Teams だったら次の行の前後削除 '<URL>' なの
 Min2 = now_time.strftime('%H:%M:%S')  #実時間
 # Min2 = '09:56:00' # debug 用
  
-sleep_time = int(start_time[0:2])*3600 + int(start_time[3:5])*60 + int(start_time[6:8]) - int(Min2[0:2])*3600 -int(Min2[3:5])*60 - int(Min2[6:8]) - 30 #分と秒で 30秒前に起動
+# sleep_time = int(start_time[0:2])*3600 + int(start_time[3:5])*60 + int(start_time[6:8]) - int(Min2[0:2])*3600 -int(Min2[3:5])*60 - int(Min2[6:8]) - 30 #分と秒で 30秒前に起動
+sleep_time = (str2time(start_time) - str2time(Min2)).total_seconds() - 30   #分と秒で 30秒前に起動
 if sleep_time < 0 : #残りが30秒以下の場合、すぐ起動する
     sleep_time = 0
  
